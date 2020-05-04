@@ -14,10 +14,10 @@ data class RNASeqParams(
 val rnaSeqWorkflow = workflow("encode-rnaseq-workflow") {
 
     val params = params<RNASeqParams>()
-    val bwaInputIps = mparams.replicatesIP.replicates
+    val bwaInputIps = params.replicatesIP.replicates
             .map {  AlignerInput(it) }
             .toFlux()
-    val bwaTaskIps = malignTask("align-ips", bwaInputIps)
+    val bwaTaskIps = alignTask("align-ips", bwaInputIps)
 
     val bamtosignalInput = bwaTaskIps
             .map { BamtoSignalInput(it.genomeBam,  it.repName ) }
