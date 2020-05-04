@@ -8,13 +8,13 @@ import task.*
 fun main(args: Array<String>) = run(rnaSeqWorkflow, args)
 
 data class RNASeqParams(
-        val replicatesIP: MergedFastqSamples
+        val samples: MergedFastqSamples
 )
 
 val rnaSeqWorkflow = workflow("encode-rnaseq-workflow") {
 
     val params = params<RNASeqParams>()
-    val bwaInputIps = params.replicatesIP.replicates
+    val bwaInputIps = params.samples.replicates
             .map {  AlignerInput(it) }
             .toFlux()
     val bwaTaskIps = alignTask("align-ips", bwaInputIps)
