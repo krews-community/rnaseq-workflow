@@ -1,5 +1,7 @@
 import krews.core.*
 import krews.run
+import model.FastqSamples
+import model.MergedFastqReplicateSE
 import model.MergedFastqSamples
 import reactor.core.publisher.toFlux
 import task.*
@@ -12,15 +14,10 @@ data class RNASeqParams(
 val rnaSeqWorkflow = workflow("encode-rnaseq-workflow") {
 
     val params = params<RNASeqParams>()
-
-    val pooledIp = mutableListOf<String>()
-    params.replicatesIP.replicates.forEach { it->
-        pooledIp.add(it.name)
-    }
-    val bwaInputIps = params.replicatesIP.replicates
-            .map { AlignerInput(it) }
+    val bwaInputIps = mparams.replicatesIP.replicates
+            .map {  AlignerInput(it) }
             .toFlux()
-    val bwaTaskIps = alignTask("align-ips", bwaInputIps)
+    val bwaTaskIps = malignTask("align-ips", bwaInputIps)
 
     val bamtosignalInput = bwaTaskIps
             .map { BamtoSignalInput(it.genomeBam,  it.repName ) }
