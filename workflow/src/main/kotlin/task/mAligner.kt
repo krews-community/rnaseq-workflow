@@ -56,7 +56,7 @@ fun WorkflowBuilder.malignTask(name: String, i: Publisher<mAlignerInput>) = this
                 -outputDir ${outputsDir}/align \
                 -ramGB 16 \
                 -outputPrefix ${input.repName} \
-                ${if (!input.pairedEnd) "-repFile1  $input.repFile1.dockerPath}" else ""} \
+                ${if (!input.pairedEnd) "-repFile1  ${input.repFile1.dockerPath}" else ""} \
                  ${if (input.pairedEnd) "-repFile1  ${input.repFile1.dockerPath}" else ""} \
                    ${if (input.pairedEnd) "-repFile2  ${input.repFile2!!.dockerPath}" else ""} \
                      ${if (input.pairedEnd) "-pairedEnd" else ""} \
