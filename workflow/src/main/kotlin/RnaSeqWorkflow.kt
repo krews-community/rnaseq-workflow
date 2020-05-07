@@ -8,16 +8,20 @@ import task.*
 fun main(args: Array<String>) = run(rnaSeqWorkflow, args)
 
 data class RNASeqParams(
-        val samples: MergedFastqSamples
+        val samples: FastqSamples
 )
 
 val rnaSeqWorkflow = workflow("encode-rnaseq-workflow") {
 
     val params = params<RNASeqParams>()
-    val bwaInputIps = params.samples.replicates
-            .map {  AlignerInput(it) }
-            .toFlux()
-    val bwaTaskIps = alignTask("align-ips", bwaInputIps)
+
+
+   val mergeFastqIpInput = params.samples.replicates.map {MergeFastqInput(it)}.toFlux()
+   val mergeFastqIpTask = MergeFastqTask("mergeFastq-rep-ip",mergeFastqIpInput)
+
+   val bwaInputIps = mergeFastqIpTask
+            .map { mAlignerInput(it.mergedFileR1,it.mergedFileR2,it.repName,it.pairedEnd) }        
+    val bwaTaskIps = malignTask("align-ips", bwaInputIps)
 
     val bamtosignalInput = bwaTaskIps
             .map { BamtoSignalInput(it.genomeBam,  it.repName ) }
