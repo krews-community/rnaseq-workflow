@@ -26,7 +26,7 @@ data class MergeFastqOutput(
 
 fun WorkflowBuilder.MergeFastqTask(name: String, i: Publisher<MergeFastqInput>) = this.task<MergeFastqInput, MergeFastqOutput>(name, i) {
 
-    dockerImage = "genomealmanac/chipseq-mergefastq:v1.0.0"
+    dockerImage = "genomealmanac/chipseq-mergefastq:v1.0.1"
 
     val prefix = "mergefastq/${input.mergedRep.name}"
     output =
