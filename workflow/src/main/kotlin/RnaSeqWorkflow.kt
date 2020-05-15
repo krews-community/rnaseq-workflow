@@ -11,17 +11,17 @@ data class RNASeqParams(
         val samples: FastqSamples
 )
 
-val rnaSeqWorkflow = workflow("encode-rnaseq-workflow") {
+val rnaSeqWorkflow = workflow("rna-seq-workflow") {
 
     val params = params<RNASeqParams>()
 
 
    val mergeFastqIpInput = params.samples.replicates.map {MergeFastqInput(it)}.toFlux()
-   val mergeFastqIpTask = MergeFastqTask("mergeFastq-rep-ip",mergeFastqIpInput)
+   val mergeFastqIpTask = MergeFastqTask("mergefastq",mergeFastqIpInput)
 
    val bwaInputIps = mergeFastqIpTask
             .map { mAlignerInput(it.mergedFileR1,it.mergedFileR2,it.repName,it.pairedEnd) }        
-    val bwaTaskIps = malignTask("align-ips", bwaInputIps)
+    val bwaTaskIps = malignTask("align", bwaInputIps)
 
     val bamtosignalInput = bwaTaskIps
             .map { BamtoSignalInput(it.genomeBam,  it.repName ) }
