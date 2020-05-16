@@ -6,6 +6,10 @@ on:
     tags:
       - '*'
 
+env:
+  GITHUB_USER: ${{ secrets.PACKAGES_USER }}
+  GITHUB_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -17,9 +21,12 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: Docker login
+        run: echo $GITHUB_TOKEN | docker login docker.pkg.github.com -u $GITHUB_USER --password-stdin
+
+      - name: Test
+        run: scripts/test.sh
+
       - name: Publish to Github registry
-        env:
-          GITHUB_USER: ${{ secrets.PACKAGES_USER }}
-          GITHUB_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
         working-directory: ./workflow
         run: ./gradlew publish

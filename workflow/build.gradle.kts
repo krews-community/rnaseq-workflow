@@ -18,7 +18,7 @@ repositories {
         name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/weng-lab/krews")
         credentials {
-            username = System.getenv("GITHUB_USERNAME")
+            username = System.getenv("GITHUB_USER")
             password = System.getenv("GITHUB_TOKEN")
         }
     }
