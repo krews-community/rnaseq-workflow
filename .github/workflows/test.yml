@@ -2,6 +2,10 @@ name: Test on Every Push
 
 on: [push]
 
+env:
+  GITHUB_USERNAME: ${{ secrets.GITHUB_USER }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   test_build:
     runs-on: ubuntu-latest
