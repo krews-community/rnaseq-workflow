@@ -4,9 +4,6 @@ import krews.core.WorkflowBuilder
 import krews.core.*
 import krews.file.File
 import krews.file.OutputFile
-import workflow.model.MergedFastqReplicate
-import workflow.model.MergedFastqReplicatePE
-import workflow.model.MergedFastqReplicateSE
 import org.reactivestreams.Publisher
 
 

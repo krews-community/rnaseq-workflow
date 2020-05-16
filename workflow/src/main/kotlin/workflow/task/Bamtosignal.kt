@@ -2,11 +2,9 @@ package workflow.task
 
 import krews.core.WorkflowBuilder
 import krews.core.*
+import workflow.model.*
 import krews.file.File
 import krews.file.OutputFile
-import workflow.model.MergedFastqReplicate
-import workflow.model.MergedFastqReplicatePE
-import workflow.model.MergedFastqReplicateSE
 import org.reactivestreams.Publisher
 
 data class BamtoSignalParams(
@@ -16,8 +14,8 @@ data class BamtoSignalParams(
 
 data class BamtoSignalInput(
     val bam: File,
-    val repName: String
-)
+    override val name: String
+) : Replicate
 
 data class  BamtoSignalOutput(
     val repName: String,
@@ -29,15 +27,15 @@ data class  BamtoSignalOutput(
     val plusUniq: File?
 )
 
-fun WorkflowBuilder.bamtosignalTask(name: String, i: Publisher< BamtoSignalInput>)
+fun WorkflowBuilder.bamtosignalTask(name: String, i: Publisher<BamtoSignalInput>)
   = this.task<BamtoSignalInput,  BamtoSignalOutput>(name, i) {
 
     val params = taskParams<BamtoSignalParams>()
     dockerImage = "docker.pkg.github.com/krews-community/rnaseq-bamtosignal-task/rnaseq-bam-to-signal:1.0.2"
-    val prefix = "${input.repName}"
+    val prefix = "${input.name}"
 
     output = BamtoSignalOutput(
-        repName = input.repName,
+        repName = input.name,
         minusAll = if (params.stranded) OutputFile("${prefix}_minusAll.bw") else null,
         minusUniq = if (params.stranded) OutputFile("${prefix}_minusUniq.bw") else null,
         all = if (params.stranded) null else OutputFile("${prefix}_All.bw"),
@@ -52,7 +50,7 @@ fun WorkflowBuilder.bamtosignalTask(name: String, i: Publisher< BamtoSignalInput
                 --bam ${input.bam.dockerPath} \
                 --chromosome-sizes ${params.chromosomeSizes.dockerPath} \
                 --output-directory ${outputsDir} \
-                --output-prefix ${input.repName} \
+                --output-prefix ${input.name} \
                 ${ if (params.stranded) "--stranded" else "" }
     """
 

@@ -4,9 +4,6 @@ import krews.core.WorkflowBuilder
 import krews.core.*
 import krews.file.File
 import krews.file.OutputFile
-import workflow.model.MergedFastqReplicate
-import workflow.model.MergedFastqReplicatePE
-import workflow.model.MergedFastqReplicateSE
 import org.reactivestreams.Publisher
 
 data class AlignerParams (
@@ -16,12 +13,12 @@ data class AlignerParams (
 data class AlignerInput (
     val repFile1: File,
     val repFile2: File?,
-    val repName: String,
+    val name: String,
     val pairedEnd: Boolean
 )
 
 data class AlignerOutput (
-    val repName: String,
+    val name: String,
     val pairedEnd: Boolean,
     val genomeBam: File,
     val annoBam: File,
@@ -35,10 +32,10 @@ fun WorkflowBuilder.alignTask(name: String, i: Publisher<AlignerInput>)
     
     val params = taskParams<AlignerParams>()
     dockerImage = "docker.pkg.github.com/krews-community/rnaseq-star-task/rnaseq-star:1.0.3"
-    val prefix = "${input.repName}"
+    val prefix = "${input.name}"
 
     output = AlignerOutput(
-        repName = input.repName,
+        name = input.name,
         pairedEnd = input.pairedEnd,
         genomeBam = OutputFile("${prefix}_genome.bam"),
         annoBam = OutputFile("${prefix}_anno.bam"),
@@ -53,7 +50,7 @@ fun WorkflowBuilder.alignTask(name: String, i: Publisher<AlignerInput>)
                 --index ${params.index.dockerPath} \
                 --output-directory ${outputsDir} \
                 --ram-gb 16 \
-                --output-prefix ${input.repName} \
+                --output-prefix ${input.name} \
                 --r1 ${input.repFile1.dockerPath} \
                 ${ if (input.pairedEnd) "--r2  ${input.repFile2!!.dockerPath}" else "" }
     """

@@ -8,7 +8,7 @@ import org.reactivestreams.Publisher
 import workflow.model.*
 
 data class MergeFastqInput(
-    val mergedRep: FastqReplicate
+    val mergedRep: Replicate
 )
 
 data class MergeFastqOutput(
@@ -32,10 +32,10 @@ fun WorkflowBuilder.MergeFastqTask(name: String, i: Publisher<MergeFastqInput>)
 
     val mergedRep = input.mergedRep
     command = if (mergedRep is FastqReplicateSE) """
-        zcat ${ mergedRep.fastqs.joinToString(" ") { it.dockerPath } } | gzip > ${outputsDir}/${input.mergedRep.name}.merged.r1.fastq.gz
+        zcat ${ mergedRep.r1.joinToString(" ") { it.dockerPath } } | gzip > ${outputsDir}/${input.mergedRep.name}.merged.r1.fastq.gz
     """ else if (mergedRep is FastqReplicatePE) """
-        zcat ${mergedRep.fastqsR1.joinToString(" ") { it.dockerPath } } | gzip > ${outputsDir}/${input.mergedRep.name}.merged.r1.fastq.gz && \
-        zcat ${mergedRep.fastqsR1.joinToString(" ") { it.dockerPath} } | gzip > ${outputsDir}/${input.mergedRep.name}.merged.r2.fastq.gz
+        zcat ${mergedRep.r1.joinToString(" ") { it.dockerPath } } | gzip > ${outputsDir}/${input.mergedRep.name}.merged.r1.fastq.gz && \
+        zcat ${mergedRep.r2.joinToString(" ") { it.dockerPath} } | gzip > ${outputsDir}/${input.mergedRep.name}.merged.r2.fastq.gz
     """ else ""
 
 }

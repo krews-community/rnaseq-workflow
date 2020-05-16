@@ -34,16 +34,30 @@ class AppTests {
         working-dir = $testRunDir
 
         params {
-            samples: {
-                -type = "workflow.model.FastqSamplesSE"
+            experiments: [{
                 replicates: [{
+                    -type = "workflow.model.FastqReplicateSE"
                     name = "testrep1"
-                    fastqs: [{
+                    r1: [{
                         -type = "krews.file.LocalInputFile"
                         local-path = "$testDir/test.fastq.gz"
                     }]
                 }]
-            }
+            }, {
+                replicates: [{
+                    -type = "workflow.model.BamReplicate"
+                    name = "testbam1"
+                    paired-end = "false"
+                    genomic-alignments = {
+                        -type = "krews.file.LocalInputFile"
+                        local-path = "$testDir/genome.bam"
+                    }
+                    transcriptomic-alignments = {
+                        -type = "krews.file.LocalInputFile"
+                        local-path = "$testDir/transcriptome.bam"
+                    }
+                }]
+            }]
         }
         
         task.align.params {
@@ -118,6 +132,26 @@ class AppTests {
             readQuantifications(outputsDir.resolve("testrep1.isoforms.results")),
             readQuantifications(testDir.resolve("isoforms.expected.results"))
         )).isGreaterThan(0.9F)
+
+        assertThat(outputsDir.resolve("testbam1.genes.results")).exists()
+        assertThat(pearsonr(
+            readQuantifications(outputsDir.resolve("testbam1.genes.results")),
+            readQuantifications(testDir.resolve("genes.bam.expected.results"))
+        )).isGreaterThan(0.9F)
+        assertThat(outputsDir.resolve("testbam1.isoforms.results")).exists()
+        assertThat(pearsonr(
+            readQuantifications(outputsDir.resolve("testbam1.isoforms.results")),
+            readQuantifications(testDir.resolve("isoforms.bam.expected.results"))
+        )).isGreaterThan(0.9F)
+
+        assertThat(outputsDir.resolve("testbam1_minusAll.bw")).exists()
+        assertThat(outputsDir.resolve("testbam1_minusAll.bw").toFile().md5()).isEqualTo("ebe7ec1e26273ce59081e5b481075832")
+        assertThat(outputsDir.resolve("testbam1_minusUniq.bw")).exists()
+        assertThat(outputsDir.resolve("testbam1_minusUniq.bw").toFile().md5()).isEqualTo("ebe7ec1e26273ce59081e5b481075832")
+        assertThat(outputsDir.resolve("testbam1_plusAll.bw")).exists()
+        assertThat(outputsDir.resolve("testbam1_plusAll.bw").toFile().md5()).isEqualTo("e671d20dd2e22fbef92e09b4dd890567")
+        assertThat(outputsDir.resolve("testbam1_plusUniq.bw")).exists()
+        assertThat(outputsDir.resolve("testbam1_plusUniq.bw").toFile().md5()).isEqualTo("e671d20dd2e22fbef92e09b4dd890567")
 
     }
 
