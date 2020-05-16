@@ -11,6 +11,8 @@ import kotlin.math.sqrt
 import testutil.md5
 import testutil.pearsonr
 import testutil.readQuantifications
+import testutil.assertMD5
+import testutil.assertPearsonR
 
 /**
  * Recursively delete directory if it exists
@@ -99,59 +101,34 @@ class AppTests {
         krews.run(rnaSeqWorkflow, arrayOf("--on", "local", "--config", t.absolutePath))
         t.delete()
 
-        assertThat(outputsDir.resolve("testrep1.merged.r1.fastq.gz")).exists()
-        assertThat(outputsDir.resolve("testrep1.merged.r1.fastq.gz").toFile().md5()).isEqualTo("6b0d6ea05ab99a717a247e0b6ace5228")
+        /* FASTQ merging task */
+        assertMD5(outputsDir.resolve("testrep1.merged.r1.fastq.gz"), "6b0d6ea05ab99a717a247e0b6ace5228")
 
-        assertThat(outputsDir.resolve("testrep1_anno.bam")).exists()
-        assertThat(outputsDir.resolve("testrep1_anno.bam").toFile().md5()).isEqualTo("1644cde899e6e71de60b669855e315bc")
-        assertThat(outputsDir.resolve("testrep1_anno_flagstat.txt")).exists()
-        assertThat(outputsDir.resolve("testrep1_anno_flagstat.txt").toFile().md5()).isEqualTo("87c78efa9ad0a76dec66ab5c8e8e7754")
-
-        assertThat(outputsDir.resolve("testrep1_genome.bam")).exists()
-        assertThat(outputsDir.resolve("testrep1_genome.bam").toFile().md5()).isEqualTo("01a7dc3459d80c0ae66dbd8fe4226dcb")
-        assertThat(outputsDir.resolve("testrep1_genome_flagstat.txt")).exists()
-        assertThat(outputsDir.resolve("testrep1_genome_flagstat.txt").toFile().md5()).isEqualTo("a96d66f579ad1d88239764e059fc2554")
+        /* STAR task */
+        assertMD5(outputsDir.resolve("testrep1_anno.bam"), "1644cde899e6e71de60b669855e315bc")
+        assertMD5(outputsDir.resolve("testrep1_anno_flagstat.txt"), "87c78efa9ad0a76dec66ab5c8e8e7754")
+        assertMD5(outputsDir.resolve("testrep1_genome.bam"), "01a7dc3459d80c0ae66dbd8fe4226dcb")
+        assertMD5(outputsDir.resolve("testrep1_genome_flagstat.txt"), "a96d66f579ad1d88239764e059fc2554")
         
-        assertThat(outputsDir.resolve("testrep1_minusAll.bw")).exists()
-        assertThat(outputsDir.resolve("testrep1_minusAll.bw").toFile().md5()).isEqualTo("ebe7ec1e26273ce59081e5b481075832")
-        assertThat(outputsDir.resolve("testrep1_minusUniq.bw")).exists()
-        assertThat(outputsDir.resolve("testrep1_minusUniq.bw").toFile().md5()).isEqualTo("ebe7ec1e26273ce59081e5b481075832")
+        /* signal generation task starting from FASTQs */
+        assertMD5(outputsDir.resolve("testrep1_minusAll.bw"), "ebe7ec1e26273ce59081e5b481075832")
+        assertMD5(outputsDir.resolve("testrep1_minusUniq.bw"), "ebe7ec1e26273ce59081e5b481075832")
+        assertMD5(outputsDir.resolve("testrep1_plusAll.bw"), "e671d20dd2e22fbef92e09b4dd890567")
+        assertMD5(outputsDir.resolve("testrep1_plusUniq.bw"), "e671d20dd2e22fbef92e09b4dd890567")
 
-        assertThat(outputsDir.resolve("testrep1_plusAll.bw")).exists()
-        assertThat(outputsDir.resolve("testrep1_plusAll.bw").toFile().md5()).isEqualTo("e671d20dd2e22fbef92e09b4dd890567")
-        assertThat(outputsDir.resolve("testrep1_plusUniq.bw")).exists()
-        assertThat(outputsDir.resolve("testrep1_plusUniq.bw").toFile().md5()).isEqualTo("e671d20dd2e22fbef92e09b4dd890567")
+        /* RSEM task starting from FASTQs */
+        assertPearsonR(outputsDir.resolve("testrep1.genes.results"), testDir.resolve("genes.expected.results"))
+        assertPearsonR(outputsDir.resolve("testrep1.isoforms.results"), testDir.resolve("isoforms.expected.results"))
 
-        assertThat(outputsDir.resolve("testrep1.isoforms.results")).exists()
-        assertThat(pearsonr(
-            readQuantifications(outputsDir.resolve("testrep1.genes.results")),
-            readQuantifications(testDir.resolve("genes.expected.results"))
-        )).isGreaterThan(0.9F)
-        assertThat(outputsDir.resolve("testrep1.genes.results")).exists()
-        assertThat(pearsonr(
-            readQuantifications(outputsDir.resolve("testrep1.isoforms.results")),
-            readQuantifications(testDir.resolve("isoforms.expected.results"))
-        )).isGreaterThan(0.9F)
+        /* RSEM task starting from BAM */
+        assertPearsonR(outputsDir.resolve("testbam1.genes.results"), testDir.resolve("genes.bam.expected.results"))
+        assertPearsonR(outputsDir.resolve("testbam1.isoforms.results"),testDir.resolve("isoforms.bam.expected.results"))
 
-        assertThat(outputsDir.resolve("testbam1.genes.results")).exists()
-        assertThat(pearsonr(
-            readQuantifications(outputsDir.resolve("testbam1.genes.results")),
-            readQuantifications(testDir.resolve("genes.bam.expected.results"))
-        )).isGreaterThan(0.9F)
-        assertThat(outputsDir.resolve("testbam1.isoforms.results")).exists()
-        assertThat(pearsonr(
-            readQuantifications(outputsDir.resolve("testbam1.isoforms.results")),
-            readQuantifications(testDir.resolve("isoforms.bam.expected.results"))
-        )).isGreaterThan(0.9F)
-
-        assertThat(outputsDir.resolve("testbam1_minusAll.bw")).exists()
-        assertThat(outputsDir.resolve("testbam1_minusAll.bw").toFile().md5()).isEqualTo("ebe7ec1e26273ce59081e5b481075832")
-        assertThat(outputsDir.resolve("testbam1_minusUniq.bw")).exists()
-        assertThat(outputsDir.resolve("testbam1_minusUniq.bw").toFile().md5()).isEqualTo("ebe7ec1e26273ce59081e5b481075832")
-        assertThat(outputsDir.resolve("testbam1_plusAll.bw")).exists()
-        assertThat(outputsDir.resolve("testbam1_plusAll.bw").toFile().md5()).isEqualTo("e671d20dd2e22fbef92e09b4dd890567")
-        assertThat(outputsDir.resolve("testbam1_plusUniq.bw")).exists()
-        assertThat(outputsDir.resolve("testbam1_plusUniq.bw").toFile().md5()).isEqualTo("e671d20dd2e22fbef92e09b4dd890567")
+        /* signal generation task starting from BAM */
+        assertMD5(outputsDir.resolve("testbam1_minusAll.bw"), "ebe7ec1e26273ce59081e5b481075832")
+        assertMD5(outputsDir.resolve("testbam1_minusUniq.bw"), "ebe7ec1e26273ce59081e5b481075832")
+        assertMD5(outputsDir.resolve("testbam1_plusAll.bw"), "e671d20dd2e22fbef92e09b4dd890567")
+        assertMD5(outputsDir.resolve("testbam1_plusUniq.bw"), "e671d20dd2e22fbef92e09b4dd890567")
 
     }
 

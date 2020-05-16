@@ -1,5 +1,6 @@
 package testutil
 
+import org.assertj.core.api.Assertions.assertThat
 import java.security.MessageDigest
 import java.io.File
 import java.nio.file.Path
@@ -43,4 +44,17 @@ fun readQuantifications(file: Path): Map<String, Float> {
         m[s[1]] = s[5].toFloat()
     }
     return m
+}
+
+fun assertMD5(f: Path, value: String) {
+    assertThat(f).exists()
+    assertThat(f.toFile().md5()).isEqualTo(value)
+}
+
+fun assertPearsonR(f: Path, c: Path, t: Float = 0.9F) {
+    assertThat(f).exists()
+    assertThat(pearsonr(
+        readQuantifications(f),
+        readQuantifications(c)
+    )).isGreaterThan(t)
 }
