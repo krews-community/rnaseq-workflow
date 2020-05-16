@@ -1,4 +1,4 @@
-package model
+package workflow.model
 
 import krews.file.File
 
@@ -15,19 +15,19 @@ interface FastqReplicate {
 
 data class FastqReplicateSE(override val name: String, val fastqs: List<File>, val adaptor: File? = null) : FastqReplicate
 data class FastqReplicatePE(
-        override val name: String,
-        val fastqsR1: List<File>,
-        val fastqsR2: List<File>,
-        val adaptorR1: File? = null,
-        val adaptorR2: File? = null
+    override val name: String,
+    val fastqsR1: List<File>,
+    val fastqsR2: List<File>,
+    val adaptorR1: File? = null,
+    val adaptorR2: File? = null
 ) : FastqReplicate
 
 interface MergedFastqSamples {
     val replicates: List<MergedFastqReplicate>
 }
 
-data class MergedFastqSamplesSE(override val replicates: List<MergedFastqReplicateSE>): MergedFastqSamples
-data class MergedFastqSamplesPE(override val replicates: List<MergedFastqReplicatePE>): MergedFastqSamples
+data class MergedFastqSamplesSE(override val replicates: List<MergedFastqReplicateSE>) : MergedFastqSamples
+data class MergedFastqSamplesPE(override val replicates: List<MergedFastqReplicatePE>) : MergedFastqSamples
 
 interface MergedFastqReplicate {
     val name: String

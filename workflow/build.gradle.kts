@@ -14,11 +14,22 @@ val artifactID = "rnaseq-workflow"
 
 repositories {
     jcenter()
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/weng-lab/krews")
+        credentials {
+            username = System.getenv("GITHUB_USERNAME")
+            password = System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
     compile(kotlin("stdlib-jdk8"))
-    compile("io.krews", "krews", "0.10.6")
+    compile("io.krews", "krews", "0.10.9")
+    testImplementation("org.junit.jupiter", "junit-jupiter", "5.4.0")
+    testCompile("org.assertj", "assertj-core", "3.11.1")
+    testImplementation("com.beust", "klaxon", "5.0.1")
 }
 
 application {
@@ -36,24 +47,10 @@ shadowJar.apply {
     destinationDirectory.set(file("build"))
 }
 
-val publicationName = "rnaseq-workflow"
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/krews-community/rnaseq-workflow")
-            credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USER")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-
-    publications {
-        create<MavenPublication>("gpr") {
-            artifactId = artifactID
-            from(components["java"])
-            artifact(shadowJar)
-        }
+tasks.withType<Test> {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
     }
 }
+    

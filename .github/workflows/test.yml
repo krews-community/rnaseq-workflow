@@ -13,6 +13,5 @@ jobs:
         with:
           java-version: 1.8
 
-      - name: Unit Test
-        working-directory: ./workflow
-        run: ./gradlew test
+      - name: Test
+        run: scripts/test.sh
