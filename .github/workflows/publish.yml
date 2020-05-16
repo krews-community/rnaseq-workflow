@@ -19,7 +19,7 @@ jobs:
 
       - name: Publish to Github registry
         env:
-          GITHUB_USER: ${{ secrets.GITHUB_USER }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USER: ${{ secrets.PACKAGES_USER }}
+          GITHUB_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
         working-directory: ./workflow
         run: ./gradlew publish

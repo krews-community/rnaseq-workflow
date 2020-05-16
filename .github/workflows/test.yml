@@ -17,5 +17,8 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: Docker login
+        run: docker login docker.pkg.github.com --username $PACKAGES_TOKEN --password $PACKAGES_TOKEN
+
       - name: Test
         run: scripts/test.sh
