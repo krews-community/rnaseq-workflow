@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.genomealmanac.rnaseq"
-version = "0.1.7"
+version = "1.0.0"
 val artifactID = "rnaseq-workflow"
 
 repositories {
@@ -51,5 +51,27 @@ tasks.withType<Test> {
     useJUnitPlatform()
     testLogging {
         events("passed", "skipped", "failed")
+    }
+}
+
+val publicationName = "rnaseq-workflow"
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/krews-community/rnaseq-workflow")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USER")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+
+    publications {
+        create<MavenPublication>("gpr") {
+            artifactId = artifactID
+            from(components["java"])
+            artifact(shadowJar)
+        }
     }
 }
