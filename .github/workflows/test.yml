@@ -18,7 +18,7 @@ jobs:
           java-version: 1.8
 
       - name: Docker login
-        run: echo $PACKAGES_TOKEN | docker login docker.pkg.github.com --username $PACKAGES_TOKEN --password-stdin
+        run: echo $GITHUB_TOKEN | docker login docker.pkg.github.com -u $GITHUB_USERNAME --password-stdin
 
       - name: Test
         run: scripts/test.sh
