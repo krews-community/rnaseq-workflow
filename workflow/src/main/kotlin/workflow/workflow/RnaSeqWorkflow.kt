@@ -45,6 +45,12 @@ val rnaSeqWorkflow = workflow("encode-rnaseq-workflow") {
     }.toFlux()
     val mergeFastqTask = MergeFastqTask("merge", mergeFastqInput)
 
+    /* run kallisto quant for experiments starting from FASTQs */
+    val kallistoInput = mergeFastqTask.map {
+        KallistoInput(it.mergedFileR1, it.mergedFileR2, it.repName)
+    }
+    kallistoTask("kallisto", kallistoInput)
+
     /* create task to align reads for experiments starting from FASTQs */
     val starInput = mergeFastqTask
         .map { AlignerInput(it.mergedFileR1, it.mergedFileR2, it.repName, it.pairedEnd) }        

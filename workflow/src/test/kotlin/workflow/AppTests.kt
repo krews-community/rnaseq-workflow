@@ -83,6 +83,15 @@ class AppTests {
                 local-path = "$testDir/test.index.tar.gz"
             }
         }
+
+        task.kallisto.params {
+            index = {
+                -type = "krews.file.LocalInputFile"
+                local-path = "$testDir/hg38.chrM.kallisto.idx"
+            }
+            fragment-length = 100
+            sd-fragment-length = 10
+        }
     """.trimIndent()
 
     @BeforeAll
@@ -103,6 +112,9 @@ class AppTests {
 
         /* FASTQ merging task */
         assertMD5(outputsDir.resolve("testrep1.merged.r1.fastq.gz"), "6b0d6ea05ab99a717a247e0b6ace5228")
+
+        /* kallisto task */
+        assertMD5(outputsDir.resolve("testrep1.abundance.tsv"), "5f9faa00904649814f7e030790164e6a")
 
         /* STAR task */
         assertMD5(outputsDir.resolve("testrep1_anno.bam"), "1644cde899e6e71de60b669855e315bc")

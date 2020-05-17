@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.genomealmanac.rnaseq"
-version = "1.0.0"
+version = "1.1.0"
 val artifactID = "rnaseq-workflow"
 
 repositories {
