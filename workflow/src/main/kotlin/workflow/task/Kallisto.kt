@@ -29,7 +29,7 @@ fun WorkflowBuilder.kallistoTask(name: String, i: Publisher<KallistoInput>)
   = this.task<KallistoInput, KallistoOutput>(name, i) {
     
     val params = taskParams<KallistoParams>()
-    dockerImage = "docker.pkg.github.com/krews-community/rnaseq-kallisto-task/rnaseq-kallisto:1.1.0"
+    dockerImage = "genomealmanac/rnaseq-kallisto:1.1.1"
     val prefix = "${input.name}"
 
     output = KallistoOutput(

@@ -31,7 +31,7 @@ fun WorkflowBuilder.bamtosignalTask(name: String, i: Publisher<BamtoSignalInput>
   = this.task<BamtoSignalInput,  BamtoSignalOutput>(name, i) {
 
     val params = taskParams<BamtoSignalParams>()
-    dockerImage = "docker.pkg.github.com/krews-community/rnaseq-bamtosignal-task/rnaseq-bam-to-signal:1.0.2"
+    dockerImage = "genomealmanac/rnaseq-bam-to-signal:1.0.3"
     val prefix = "${input.name}"
 
     output = BamtoSignalOutput(

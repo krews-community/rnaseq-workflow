@@ -31,7 +31,7 @@ fun WorkflowBuilder.alignTask(name: String, i: Publisher<AlignerInput>)
   = this.task<AlignerInput, AlignerOutput>(name, i) {
     
     val params = taskParams<AlignerParams>()
-    dockerImage = "docker.pkg.github.com/krews-community/rnaseq-star-task/rnaseq-star:1.0.3"
+    dockerImage = "genomealmanac/rnaseq-star:1.0.4"
     val prefix = "${input.name}"
 
     output = AlignerOutput(

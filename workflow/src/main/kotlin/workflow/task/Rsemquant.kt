@@ -29,7 +29,7 @@ fun WorkflowBuilder.rsemquantTask(name: String, i: Publisher< RsemQuantInput>)
   = this.task<RsemQuantInput,  RsemQuantOutput>(name, i) {
     
     val params = taskParams<RsemQuantParams>()
-    dockerImage = "docker.pkg.github.com/krews-community/rnaseq-rsem-task/rnaseq-rsem:1.0.3"
+    dockerImage = "genomealmanac/rnaseq-rsem:1.0.4"
     val prefix = "${input.repName}"
 
     output = RsemQuantOutput(
