@@ -57,7 +57,7 @@ fun WorkflowBuilder.alignTask(name: String, i: Publisher<AlignerInput>)
                 --r1 ${input.repFile1.dockerPath} \
                 --cores ${params.cores} \
                 --ram-gb ${params.ramGb} \
-                ${ if (params.indexTarPrefix !== null) "--index-tar-prefix ${params.indexTarPrefix" } \
+                ${ if (params.indexTarPrefix !== null) "--index-tar-prefix ${params.indexTarPrefix}" else "" } \
                 ${ if (input.pairedEnd) "--r2  ${input.repFile2!!.dockerPath}" else "" }
     """
 
