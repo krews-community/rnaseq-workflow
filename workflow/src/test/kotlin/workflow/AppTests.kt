@@ -119,7 +119,7 @@ class AppTests {
         /* STAR task */
         assertMD5(outputsDir.resolve("testrep1_anno.bam"), "1644cde899e6e71de60b669855e315bc")
         assertMD5(outputsDir.resolve("testrep1_anno_flagstat.txt"), "87c78efa9ad0a76dec66ab5c8e8e7754")
-        assertMD5(outputsDir.resolve("testrep1_genome.bam"), "01a7dc3459d80c0ae66dbd8fe4226dcb")
+        assertMD5(outputsDir.resolve("testrep1_genome.bam"), "d4ad88115de000f4836e175b37287521")
         assertMD5(outputsDir.resolve("testrep1_genome_flagstat.txt"), "a96d66f579ad1d88239764e059fc2554")
         
         /* signal generation task starting from FASTQs */
