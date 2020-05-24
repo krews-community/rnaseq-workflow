@@ -1,0 +1,52 @@
+19:20:57.826 [main] INFO util.CmdUtils - Executing command: [sh, -c, tar xvf /inputs/star.index.tar.gz -C /outputs/out]
+./
+./exonGeTrInfo.tab
+./sjdbInfo.txt
+./Genome
+./SA
+./sjdbList.out.tab
+./genomeParameters.txt
+./exonInfo.tab
+./transcriptInfo.tab
+./chrNameLength.txt
+./sjdbList.fromGTF.out.tab
+./SAindex
+./chrLength.txt
+./chrName.txt
+./chrStart.txt
+./geneInfo.tab
+19:20:57.905 [main] INFO util.CmdUtils - Executing command: [sh, -c, 
+        STAR \
+            --genomeDir /outputs/out \
+            --readFilesIn /inputs/testrep1.merged.r1.fastq.gz  \
+            --readFilesCommand zcat \
+            --runThreadN 1 \
+            --genomeLoad NoSharedMemory \
+            --outFilterMultimapNmax 20 \
+            --alignSJoverhangMin 8 \
+            --alignSJDBoverhangMin 1 \
+            --outFilterMismatchNmax 999 \
+            --outFilterMismatchNoverReadLmax 0.04 \
+            --alignIntronMin 20 \
+            --alignIntronMax 1000000 \
+            --alignMatesGapMax 1000000 \
+            --outSAMheaderCommentFile COfile.txt \
+            --outSAMheaderHD @HD VN:1.4 SO:coordinate \
+            --outSAMunmapped Within \
+            --outFilterType BySJout \
+            --outSAMattributes NH HI AS NM MD \
+             \
+            --outSAMtype BAM SortedByCoordinate \
+            --quantMode TranscriptomeSAM \
+            --sjdbScore 1 \
+            --limitBAMsortRAM 16000000000 \
+            --outFileNamePrefix /outputs/star
+    ]
+May 24 19:20:57 ..... Started STAR run
+May 24 19:20:57 ..... Loading genome
+May 24 19:20:57 ..... Started mapping
+May 24 19:20:58 ..... Started sorting BAM
+May 24 19:20:59 ..... Finished successfully
+19:20:59.055 [main] INFO util.CmdUtils - Executing command: [sh, -c, rsem-sam-validator /outputs/starAligned.toTranscriptome.out.bam]
+19:20:59.063 [main] INFO util.CmdUtils - Executing command: [sh, -c, samtools flagstat /outputs/testrep1_genome.bam >  /outputs/testrep1_genome_flagstat.txt]
+19:20:59.068 [main] INFO util.CmdUtils - Executing command: [sh, -c, samtools flagstat /outputs/testrep1_anno.bam >  /outputs/testrep1_anno_flagstat.txt]

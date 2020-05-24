@@ -1,0 +1,274 @@
+<html>
+  <head>
+    <title>Workflow encode-rnaseq-workflow Run Report</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap4.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <h1 class="display-4">Krews Report for encode-rnaseq-workflow<br><small class="text-muted">Run 1590347818971</small></h1>
+      <div class="alert alert-secondary">
+        <h4>Run still in progress...</h4>
+      </div>
+      <table class="table table-striped table-bordered dt-responsive nowrap" id="tasks">
+        <thead>
+          <tr>
+            <th class="all">Task Name</th>
+            <th class="all">Task Run ID</th>
+            <th class="all">Status</th>
+            <th class="all">Start Time</th>
+            <th class="all">Duration</th>
+            <th class="none">Execution Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>merge</td>
+            <td>1</td>
+            <td><span class="badge badge-success">Succeeded</span></td>
+            <td>2020-05-24 15:17:00</td>
+            <td>3.613s</td>
+            <td>
+              <table class="table table-striped table-bordered mt-2">
+                <thead>
+                  <tr>
+                    <th>Docker Image</th>
+                    <th>Command</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>alpine:latest</td>
+                    <td class="command-cell">
+                      <pre>zcat /inputs/test.fastq.gz | gzip &gt; /outputs/testrep1.merged.r1.fastq.gz</pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>align</td>
+            <td>2</td>
+            <td><span class="badge badge-success">Succeeded</span></td>
+            <td>2020-05-24 15:17:04</td>
+            <td>3m55.127s</td>
+            <td>
+              <table class="table table-striped table-bordered mt-2">
+                <thead>
+                  <tr>
+                    <th>Docker Image</th>
+                    <th>Command</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>genomealmanac/rnaseq-star:1.0.4</td>
+                    <td class="command-cell">
+                      <pre>java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 \
+    -jar /app/star.jar \
+        --index /inputs/star.index.tar.gz \
+        --output-directory /outputs \
+        --ram-gb 16 \
+        --output-prefix testrep1 \
+        --r1 /inputs/testrep1.merged.r1.fastq.gz \
+        --cores 1 \
+        --ram-gb 16 \
+        </pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>kallisto</td>
+            <td>3</td>
+            <td><span class="badge badge-secondary">In Progress</span></td>
+            <td>2020-05-24 15:17:04</td>
+            <td>5m55.033s</td>
+            <td>
+              <table class="table table-striped table-bordered mt-2">
+                <thead>
+                  <tr>
+                    <th>Docker Image</th>
+                    <th>Command</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>genomealmanac/rnaseq-kallisto:1.1.1</td>
+                    <td class="command-cell">
+                      <pre>java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 \
+    -jar /app/kallisto.jar quant \
+        --index /inputs/hg38.chrM.kallisto.idx \
+        --output-directory /outputs \
+        --cores 1 \
+        --strandedness unstranded \
+        --fragment-length 100 \
+        --sd-fragment-length 10 \
+        --output-prefix testrep1 \
+        --r1 /inputs/testrep1.merged.r1.fastq.gz \
+        </pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>signal</td>
+            <td>4</td>
+            <td><span class="badge badge-secondary">In Progress</span></td>
+            <td>2020-05-24 15:21:00</td>
+            <td>1m58.98s</td>
+            <td>
+              <table class="table table-striped table-bordered mt-2">
+                <thead>
+                  <tr>
+                    <th>Docker Image</th>
+                    <th>Command</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>genomealmanac/rnaseq-bam-to-signal:1.0.3</td>
+                    <td class="command-cell">
+                      <pre>java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 \
+    -jar /app/bamtosignal.jar \
+        --bam /inputs/testrep1_genome.bam \
+        --chromosome-sizes /inputs/chrom.sizes \
+        --output-directory /outputs \
+        --output-prefix testrep1 \
+        --stranded</pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>signal</td>
+            <td>5</td>
+            <td><span class="badge badge-secondary">In Progress</span></td>
+            <td>2020-05-24 15:21:00</td>
+            <td>1m58.972s</td>
+            <td>
+              <table class="table table-striped table-bordered mt-2">
+                <thead>
+                  <tr>
+                    <th>Docker Image</th>
+                    <th>Command</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>genomealmanac/rnaseq-bam-to-signal:1.0.3</td>
+                    <td class="command-cell">
+                      <pre>java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 \
+    -jar /app/bamtosignal.jar \
+        --bam /inputs/genome.bam \
+        --chromosome-sizes /inputs/chrom.sizes \
+        --output-directory /outputs \
+        --output-prefix testbam1 \
+        --stranded</pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>quant</td>
+            <td>6</td>
+            <td><span class="badge badge-secondary">In Progress</span></td>
+            <td>2020-05-24 15:21:00</td>
+            <td>1m58.973s</td>
+            <td>
+              <table class="table table-striped table-bordered mt-2">
+                <thead>
+                  <tr>
+                    <th>Docker Image</th>
+                    <th>Command</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>genomealmanac/rnaseq-rsem:1.0.4</td>
+                    <td class="command-cell">
+                      <pre>java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 \
+    -jar /app/rsem.jar \
+        --bam /inputs/testrep1_anno.bam \
+        --index /inputs/test.index.tar.gz \
+        --output-directory /outputs \
+        --output-prefix testrep1 \
+        --strand unstranded \
+        --cores 1 \
+        --ram-gb 16 \
+         \
+        </pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>quant</td>
+            <td>7</td>
+            <td><span class="badge badge-secondary">In Progress</span></td>
+            <td>2020-05-24 15:21:00</td>
+            <td>1m58.975s</td>
+            <td>
+              <table class="table table-striped table-bordered mt-2">
+                <thead>
+                  <tr>
+                    <th>Docker Image</th>
+                    <th>Command</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>genomealmanac/rnaseq-rsem:1.0.4</td>
+                    <td class="command-cell">
+                      <pre>java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 \
+    -jar /app/rsem.jar \
+        --bam /inputs/transcriptome.bam \
+        --index /inputs/test.index.tar.gz \
+        --output-directory /outputs \
+        --output-prefix testbam1 \
+        --strand unstranded \
+        --cores 1 \
+        --ram-gb 16 \
+         \
+        </pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap4.min.js"></script>
+    <script>$(document).ready(function() {
+    $('#tasks').DataTable();
+} );</script>
+    <style>.command-cell {
+    overflow: auto;
+    max-width: 600px;
+    max-height: 250px;
+}
+#tasks {
+    width: 100%;
+}</style>
+  </body>
+</html>

@@ -10,7 +10,9 @@ import org.reactivestreams.Publisher
 data class RsemQuantParams(
     val index: File,
     val strand: String = "unstranded",
-    val seed: Int? = null
+    val seed: Int? = null,
+    val cores: Int = 1,
+    val ramGb: Int = 16
 )
 
 data class RsemQuantInput(
@@ -46,6 +48,8 @@ fun WorkflowBuilder.rsemquantTask(name: String, i: Publisher< RsemQuantInput>)
                 --output-directory ${outputsDir} \
                 --output-prefix ${input.repName} \
                 --strand ${params.strand} \
+                --cores ${params.cores} \
+                --ram-gb ${params.ramGb} \
                 ${ if (params.seed !== null) "--seed ${params.seed}" else "" } \
                 ${ if (input.pairedEnd) "--paired-end" else "" }
     """

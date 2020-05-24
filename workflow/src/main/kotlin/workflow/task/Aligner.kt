@@ -7,7 +7,9 @@ import krews.file.OutputFile
 import org.reactivestreams.Publisher
 
 data class AlignerParams (
-    val index: File
+    val index: File,
+    val cores: Int = 1,
+    val ramGb: Int = 16
 )
 
 data class AlignerInput (
@@ -52,6 +54,8 @@ fun WorkflowBuilder.alignTask(name: String, i: Publisher<AlignerInput>)
                 --ram-gb 16 \
                 --output-prefix ${input.name} \
                 --r1 ${input.repFile1.dockerPath} \
+                --cores ${params.cores} \
+                --ram-gb ${params.ramGb} \
                 ${ if (input.pairedEnd) "--r2  ${input.repFile2!!.dockerPath}" else "" }
     """
 
