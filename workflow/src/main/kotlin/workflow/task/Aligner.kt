@@ -9,7 +9,8 @@ import org.reactivestreams.Publisher
 data class AlignerParams (
     val index: File,
     val cores: Int = 1,
-    val ramGb: Int = 16
+    val ramGb: Int = 16,
+    val indexTarPrefix: String? = null
 )
 
 data class AlignerInput (
@@ -33,7 +34,7 @@ fun WorkflowBuilder.alignTask(name: String, i: Publisher<AlignerInput>)
   = this.task<AlignerInput, AlignerOutput>(name, i) {
     
     val params = taskParams<AlignerParams>()
-    dockerImage = "genomealmanac/rnaseq-star:1.0.4"
+    dockerImage = "genomealmanac/rnaseq-star:1.0.5"
     val prefix = "${input.name}"
 
     output = AlignerOutput(
@@ -56,6 +57,7 @@ fun WorkflowBuilder.alignTask(name: String, i: Publisher<AlignerInput>)
                 --r1 ${input.repFile1.dockerPath} \
                 --cores ${params.cores} \
                 --ram-gb ${params.ramGb} \
+                ${ if (params.indexTarPrefix !== null) "--index-tar-prefix ${params.indexTarPrefix" } \
                 ${ if (input.pairedEnd) "--r2  ${input.repFile2!!.dockerPath}" else "" }
     """
 
