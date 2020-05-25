@@ -10,7 +10,8 @@ data class AlignerParams (
     val index: File,
     val cores: Int = 1,
     val ramGb: Int = 16,
-    val indexTarPrefix: String? = null
+    val indexTarPrefix: String? = null,
+    val minReadLength: Int = 20
 )
 
 data class AlignerInput (
@@ -34,7 +35,7 @@ fun WorkflowBuilder.alignTask(name: String, i: Publisher<AlignerInput>)
   = this.task<AlignerInput, AlignerOutput>(name, i) {
     
     val params = taskParams<AlignerParams>()
-    dockerImage = "genomealmanac/rnaseq-star:1.0.6"
+    dockerImage = "genomealmanac/rnaseq-star:1.1.1"
     val prefix = "${input.name}"
 
     output = AlignerOutput(
@@ -52,11 +53,11 @@ fun WorkflowBuilder.alignTask(name: String, i: Publisher<AlignerInput>)
             -jar /app/star.jar \
                 --index ${params.index.dockerPath} \
                 --output-directory ${outputsDir} \
-                --ram-gb 16 \
                 --output-prefix ${input.name} \
                 --r1 ${input.repFile1.dockerPath} \
                 --cores ${params.cores} \
                 --ram-gb ${params.ramGb} \
+                --min-read-length ${params.minReadLength} \
                 ${ if (params.indexTarPrefix !== null) "--index-tar-prefix ${params.indexTarPrefix}" else "" } \
                 ${ if (input.pairedEnd) "--r2  ${input.repFile2!!.dockerPath}" else "" }
     """

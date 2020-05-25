@@ -13,7 +13,8 @@ data class RsemQuantParams(
     val seed: Int? = null,
     val cores: Int = 1,
     val ramGb: Int = 16,
-    val indexTarPrefix: String? = null
+    val indexTarPrefix: String? = null,
+    val indexNamePrefix: String? = null
 )
 
 data class RsemQuantInput(
@@ -32,7 +33,7 @@ fun WorkflowBuilder.rsemquantTask(name: String, i: Publisher< RsemQuantInput>)
   = this.task<RsemQuantInput,  RsemQuantOutput>(name, i) {
     
     val params = taskParams<RsemQuantParams>()
-    dockerImage = "genomealmanac/rnaseq-rsem:1.0.5"
+    dockerImage = "genomealmanac/rnaseq-rsem:1.0.6"
     val prefix = "${input.repName}"
 
     output = RsemQuantOutput(
@@ -52,6 +53,7 @@ fun WorkflowBuilder.rsemquantTask(name: String, i: Publisher< RsemQuantInput>)
                 --cores ${params.cores} \
                 --ram-gb ${params.ramGb} \
                 ${ if (params.indexTarPrefix !== null) "--index-tar-prefix ${params.indexTarPrefix}" else "" } \
+                ${ if (params.indexNamePrefix !== null) "--index-name-prefix ${params.indexNamePrefix}" else "" } \
                 ${ if (params.seed !== null) "--seed ${params.seed}" else "" } \
                 ${ if (input.pairedEnd) "--paired-end" else "" }
     """
