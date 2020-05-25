@@ -12,7 +12,8 @@ data class RsemQuantParams(
     val strand: String = "unstranded",
     val seed: Int? = null,
     val cores: Int = 1,
-    val ramGb: Int = 16
+    val ramGb: Int = 16,
+    val indexTarPrefix: String? = null
 )
 
 data class RsemQuantInput(
@@ -50,6 +51,7 @@ fun WorkflowBuilder.rsemquantTask(name: String, i: Publisher< RsemQuantInput>)
                 --strand ${params.strand} \
                 --cores ${params.cores} \
                 --ram-gb ${params.ramGb} \
+                ${ if (params.indexTarPrefix !== null) "--index-tar-prefix ${params.indexTarPrefix}" else "" } \
                 ${ if (params.seed !== null) "--seed ${params.seed}" else "" } \
                 ${ if (input.pairedEnd) "--paired-end" else "" }
     """
