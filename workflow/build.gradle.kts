@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.genomealmanac.rnaseq"
-version = "1.1.6"
+version = "1.1.7"
 val artifactID = "rnaseq-workflow"
 
 repositories {
@@ -26,7 +26,7 @@ repositories {
 
 dependencies {
     compile(kotlin("stdlib-jdk8"))
-    compile("io.krews", "krews", "0.10.9")
+    compile("io.krews", "krews", "0.10.10")
     testImplementation("org.junit.jupiter", "junit-jupiter", "5.4.0")
     testCompile("org.assertj", "assertj-core", "3.11.1")
     testImplementation("com.beust", "klaxon", "5.0.1")
