@@ -43,6 +43,7 @@ fun WorkflowBuilder.rsemquantTask(name: String, i: Publisher< RsemQuantInput>)
     )
 
     command = """
+        export TMPDIR="${outputsDir}"
         java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 \
             -jar /app/rsem.jar \
                 --bam ${input.bamFile.dockerPath} \

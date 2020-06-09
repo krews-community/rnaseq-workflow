@@ -49,6 +49,7 @@ fun WorkflowBuilder.alignTask(name: String, i: Publisher<AlignerInput>)
     )
 
     command = """
+        export TMPDIR="${outputsDir}"
         java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 \
             -jar /app/star.jar \
                 --index ${params.index.dockerPath} \

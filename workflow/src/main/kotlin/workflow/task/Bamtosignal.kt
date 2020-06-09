@@ -45,6 +45,7 @@ fun WorkflowBuilder.bamtosignalTask(name: String, i: Publisher<BamtoSignalInput>
     )
 
     command = """
+        export TMPDIR="${outputsDir}"
         java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 \
             -jar /app/bamtosignal.jar \
                 --bam ${input.bam.dockerPath} \
